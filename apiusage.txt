@@ -1,0 +1,496 @@
+# All available resources 3
+	https://secure-headland-8362.herokuapp.com/api/v1/
+
+# Create User / Sign Up
+	create_user 						- POST
+
+# Update User
+	user_profile/:id/					- PUT
+
+# Log In
+	login 								- POST
+
+# Log Out
+	logout 								- GET
+
+# Create Exercise Session
+	exercise_session					- POST
+
+# Get All Completed Exercise Sessions
+	exercise_session					- GET
+
+# Get Specific Exercise Session
+	exercise_session/:id/				- GET
+
+# Create Meditaiton Session
+	meditation_session					- POST
+
+# Update a Meditation Session
+	meditation_session/:meditation_id/	- PATCH
+
+# Get All Med Sessions
+	meditation_session					- GET
+
+# Update Assessment w/ start_time
+	assessment/:assessment_id			- PATCH
+
+# Get pending assessment
+  assessment/get_pending_assessment
+
+# Push All Responses
+	response							- PATCH
+
+# Push All Pebble Logs
+  exercise_reminder     - PATCH
+
+######################## Create a user object ########################
+### Create a user with given info and send back the sessionid cookie and the user
+
+# api:
+	create_user
+
+# type:
+	POST
+
+# required fields: 
+	username
+	password
+	email
+	first_name
+	last_name
+	birthday
+	gender
+
+# sample call:
+curl -v -H "Content-Type: application/json" -X POST --data 
+'{
+  "birthday": "2015-03-30",
+  "gender": "1",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "goooch_attack19@catfacts.co",
+  "username": "lotus_user19",
+  "raw_password": "password"
+}' https://secure-headland-8362.herokuapp.com/api/v1/create_user/
+
+# sample response:
+	Header:
+< HTTP/1.1 201 CREATED
+< Connection: keep-alive
+* Server gunicorn/19.2.1 is not blacklisted
+< Server: gunicorn/19.2.1
+< Date: Sat, 11 Apr 2015 01:46:40 GMT
+< Transfer-Encoding: chunked
+< X-Frame-Options: SAMEORIGIN
+< Vary: Accept, Cookie
+< Content-Type: application/json
+< Location: https://secure-headland-8362.herokuapp.com/api/v1/user_profile/36/
+< Set-Cookie: sessionid=n1f6nah48rxdtizzx12k25udjjh37fa0; expires=Sat, 25-Apr-2015 01:46:40 GMT; httponly; Max-Age=1209600; Path=/
+< Set-Cookie: csrftoken=HRAXv68fYq1THLQyPBM74CgFQfczOJDW; expires=Sat, 09-Apr-2016 01:46:40 GMT; Max-Age=31449600; Path=/
+< Via: 1.1 vegur
+
+	Body:
+{
+  "birthday": "2015-03-30",
+  "created_at": "2015-04-09T14:36:46.618477",
+  "email": "goooch_attack19@catfacts.co",
+  "exercise_day_of_week": 0,
+  "exercise_time": null,
+  "first_name": "John",
+  "gender": 1,
+  "id": 16,
+  "last_name": "Doe",
+  "meditation_time": null,
+  "start_date": "2015-04-09T14:36:46.618409",
+  "updated_at": "2015-04-09T14:36:46.659953",
+  "username": "lotus_user19"
+}
+
+# Test:
+curl -v -H "Content-Type: application/json" -X POST --data '{"birthday" : "2015-03-30", "gender": "1", "first_name": "John", "last_name": "Doe", "email" : "goooch_attack93@catfacts.co", "username": "lotus_user93", "raw_password": "password"}' https://secure-headland-8362.herokuapp.com/api/v1/create_user/
+
+
+######################## Update a User Object For Onboarding (Med/Exercise Time/Day) ########################
+### Update meditation time and exercise time
+
+# api:
+	user_profile/
+
+# type:
+	PUT
+
+# required fields: 
+	meditation_time
+	exercise_day_of_week
+	exercise_time
+  apns_token
+
+# sample call:
+curl -v -H "Content-Type: application/json" -X PUT --data 
+'{
+  "meditation_time": "11:46:42",
+  "exercise_day_of_week": "1",
+  "exercise_time": "11:46:42"
+}' https://secure-headland-8362.herokuapp.com/api/v1/user_profile/65/
+
+# sample response:
+# TODO: fix this so it's not so verbose - maybe? w/e, you still get the 200 OK
+< HTTP/1.1 200 OK
+
+{"birthday": "2015-03-30", "created_at": "2015-04-16T15:59:46.296810", "exercise_day_of_week": 1, "exercise_time": "11:46:42", "gender": 1, "id": 39, "meditation_time": "11:46:42", "pk": 39, "resource_uri": "/api/v1/user_profile/39/", "updated_at": "2015-04-16T16:00:07.838086", "user": {"email": "goooch_attack90@catfacts.co", "first_name": "John", "id": 67, "last_name": "Doe", "resource_uri": "/api/v1/user/67/", "username": "lotus_user90"}}
+
+# Test:
+
+curl --cookie "sessionid=70ctwv08xdygcmmnsdtq3gx3wu8i213t" -v -H "Content-Type: application/json" -X PATCH --data '{"meditation_time": "11:46:42","exercise_day_of_week": "1","exercise_time": "11:46:42", "apns_token":"elq4p3nn1tyqk9nu5gnd2w5jx389pw66"}' https://secure-headland-8362.herokuapp.com/api/v1/user_profile/
+
+
+
+curl --cookie "sessionid=s02bv090lzatolhhuzctl6qsjeet3wqz" -v -H "Content-Type: application/json" -X PATCH --data '{"created_at": "2015-04-15T16:00:00.838086", "apns_token":"elq4p3nn1tyqk9nu5gnd2w5jx389pw66"}' https://secure-headland-8362.herokuapp.com/api/v1/user_profile/
+
+
+curl -v -H "Content-Type: application/json" -X POST --data '{"username": "ghking", "password": "blink182"}' https://secure-headland-8362.herokuapp.com/api/v1/user/login/
+
+a08423188a75a26d3bde67d9a7cfd7cf6b6370e9033d7dc829e2b0d5d1087950
+
+
+######################## Log a User In ########################
+### Log given user in and return the sessionid cookie and that user
+
+# api:
+	user/login
+
+# type:
+	POST
+
+# required fields: 
+	username
+	password
+
+# sample call:
+curl -v -H "Content-Type: application/json" -X POST --data 
+'{
+	"username": "lotus_user40", 
+	"password": "password"
+}' https://secure-headland-8362.herokuapp.com/api/v1/user/login/
+
+# sample response:
+	Header:
+< HTTP/1.1 201 CREATED
+< Connection: keep-alive
+* Server gunicorn/19.2.1 is not blacklisted
+< Server: gunicorn/19.2.1
+< Date: Sat, 11 Apr 2015 01:46:40 GMT
+< Transfer-Encoding: chunked
+< X-Frame-Options: SAMEORIGIN
+< Vary: Accept, Cookie
+< Content-Type: application/json
+< Location: https://secure-headland-8362.herokuapp.com/api/v1/user_profile/36/
+< Set-Cookie: sessionid=n1f6nah48rxdtizzx12k25udjjh37fa0; expires=Sat, 25-Apr-2015 01:46:40 GMT; httponly; Max-Age=1209600; Path=/
+< Set-Cookie: csrftoken=HRAXv68fYq1THLQyPBM74CgFQfczOJDW; expires=Sat, 09-Apr-2016 01:46:40 GMT; Max-Age=31449600; Path=/
+< Via: 1.1 vegur
+
+	Body:
+{
+  "birthday": "2015-03-30",
+  "date_joined": "2015-04-10T21:46:40.461255",
+  "email": "goooch_attack40@catfacts.co",
+  "exercise_day_of_week": 0,
+  "exercise_time": null,
+  "first_name": "John",
+  "gender": 1,
+  "id": 65,
+  "last_login": "2015-04-11T00:11:59.038676",
+  "last_name": "Doe",
+  "meditation_time": null,
+  "start_date": "2015-04-10T21:46:40.457065",
+  "username": "lotus_user40"
+}
+
+# Test:
+curl -v -H "Content-Type: application/json" -X POST --data '{"username": "lotus_user40", "password": "password"}' https://secure-headland-8362.herokuapp.com/api/v1/user/login/
+
+
+######################## Log a User Out ########################
+### Log current user out
+
+# api:
+	user/logout
+
+# type:
+	GET
+
+# required fields: 
+	[NONE]
+
+# response:
+	failure:
+< HTTP/1.1 401 UNAUTHORIZED
+{"success": false}
+
+# Test:
+curl --cookie "sessionid=sjaooxh4pck3eli4m3y4dvc8wevlwz5z" -v -H "Content-Type: application/json" -X GET https://secure-headland-8362.herokuapp.com/api/v1/user/logout/
+
+
+######################## Get a List of Exercise Sessions ########################
+### Get all the exercise sessions for the current user
+
+# api:
+	exercise_session
+
+# type:
+	GET
+
+# required fields: 
+	[just the sessionid cookie]
+
+# response:
+{
+  "meta": {
+    "limit": 20,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total_count": 1
+  },
+  "objects": [
+    {
+      "created_at": "2015-04-11T00:27:19.185783",
+      "exercise_id": 23,
+      "id": 12,
+      "updated_at": "2015-04-11T00:27:19.195535"
+    }
+  ]
+}
+
+# Test:
+
+curl --cookie "sessionid=8hg0a2o3ipdgcp30lcsn4qrdbzmm0xat" -v -H "Content-Type: application/json" -X GET https://secure-headland-8362.herokuapp.com/api/v1/exercise_session/
+
+
+######################## Create an Exercise Sessions ########################
+### Takes in an exercise session id and adds it to the table
+
+# api:
+	exercise_session/
+
+# type:
+	POST
+
+# required fields: 
+	exercise_id
+
+# response:
+< HTTP/1.1 201 CREATED
+
+# Test:
+
+curl --cookie "sessionid=8hg0a2o3ipdgcp30lcsn4qrdbzmm0xat" -v -H "Content-Type: application/json" -X POST --data '{"exercise_id": "101"}' https://secure-headland-8362.herokuapp.com/api/v1/exercise_session/
+
+
+######################## Create a Meditation Sessions ########################
+### Creates meditation session
+
+# api:
+	meditation_session
+
+# type:
+	POST
+
+# required fields: 
+	meditation_id
+	percent_completed
+
+# response:
+< HTTP/1.1 201 CREATED
+{"created_at": "2015-04-14T13:32:19.559519", "id": 10, "meditation_id": 5, "percent_completed": 0.5, "resource_uri": "/api/v1/meditation_session/5/", "updated_at": "2015-04-14T13:32:19.663322", "user": "/api/v1/user/65/"}
+
+# Test:
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X POST --data '{"percent_completed": ".5", "meditation_id": "5"}' https://secure-headland-8362.herokuapp.com/api/v1/meditation_session/
+
+######################## Update a Meditation Sessions ########################
+### Updates meditation session with that meditation_id
+
+# api:
+	meditation_session/:meditation_id
+
+# type:
+	PATCH
+
+# required fields: 
+	percent_completed
+
+# response:
+< HTTP/1.1 202 ACCEPTED
+
+{"created_at": "2015-04-14T13:32:19.559519", "id": 10, "meditation_id": 5, "percent_completed": 0.6, "resource_uri": "/api/v1/meditation_session/5/", "updated_at": "2015-04-14T13:33:44.245665", "user": "/api/v1/user/65/"}
+
+		----OR ----
+< HTTP/1.1 400 BAD REQUEST
+
+{"error": {"code": "lower_percent", "message": "precent_completed of 0.7 is higher than the new value of 0.7"}}
+
+# Test:
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X PATCH --data '{"percent_completed": ".7"}' https://secure-headland-8362.herokuapp.com/api/v1/meditation_session/5/
+
+
+######################## Get All Meditation Sessions ########################
+### Updates meditation session with that meditation_id
+
+# api:
+	meditation_session
+
+# type:
+	GET
+
+# required fields: 
+	[NONE]
+
+# response:
+< HTTP/1.1 200 OK
+
+{"meta": {"limit": 20, "next": null, "offset": 0, "previous": null, "total_count": 3}, "objects": [{"created_at": "2015-04-01T17:33:50.149201", "id": 7, "meditation_id": 2, "percent_completed": 0.5, "resource_uri": "/api/v1/meditation_session/2/", "updated_at": "2015-04-14T13:24:01.447077", "user": "/api/v1/user/65/"}, {"created_at": "2015-04-14T13:27:49.574290", "id": 9, "meditation_id": 3, "percent_completed": 0.6, "resource_uri": "/api/v1/meditation_session/3/", "updated_at": "2015-04-14T13:29:52.003411", "user": "/api/v1/user/65/"}, {"created_at": "2015-04-14T13:32:19.559519", "id": 10, "meditation_id": 5, "percent_completed": 0.7, "resource_uri": "/api/v1/meditation_session/5/", "updated_at": "2015-04-14T14:00:32.460326", "user": "/api/v1/user/65/"}]}
+
+# Test
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X GET https://secure-headland-8362.herokuapp.com/api/v1/meditation_session/
+
+
+
+######################## Update Assesment With Start Time ########################
+### Update Assessment with start time (right when user opens it)
+
+# api:
+	assessment/:assessment_id
+
+# type:
+	PATCH
+
+# required fields: 
+	start_time
+
+# response:
+{
+   "complete_time":null,
+   "created_at":"2015-04-14T19:38:05.484441",
+   "id":5,
+   "resource_uri":"/api/v1/assessment/5/",
+   "responses":[
+
+   ],
+   "start_time":"2015-04-14T18:56:59",
+   "updated_at":"2015-04-14T19:38:14.592931",
+   "user":"/api/v1/user/65/"
+}
+
+# Test:
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X PATCH --data '{"start_time": "2015-04-14T18:56:59"}' https://secure-headland-8362.herokuapp.com/api/v1/assessment/5/
+
+# Here are some tests for doing a get on the Assessment
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X GET https://secure-headland-8362.herokuapp.com/api/v1/assessment/4/
+
+curl --cookie "sessionid=0bznhbj2fullol03tovzqqf850o4w8l6" -v -H "Content-Type: application/json" -X POST --data '{"start_time":"2015-04-14T18:56:59"}' https://secure-headland-8362.herokuapp.com/api/v1/assessment/
+
+{"complete_time": null, "created_at": "2015-04-14T19:40:30.518059", "id": 6, "resource_uri": "/api/v1/assessment/6/", "responses": [], "start_time": "2015-04-14T18:56:59", "updated_at": "2015-04-14T19:40:30.596062", "user": "/api/v1/user/65/"}
+
+
+
+######################## Get Pending Assessment ########################
+### Creates the response objects for the particular assessment
+
+curl --cookie "sessionid=964hurhgw9ouw2quhkcn7dy1oebwtrtc" -v -H "Content-Type: application/json" -X GET https://secure-headland-8362.herokuapp.com/api/v1/assessment/get_pending_assessment/
+
+
+
+######################## Set Responses for Assessment ########################
+### Creates the response objects for the particular assessment
+
+# api:
+	response
+
+# type:
+	PATCH
+
+# required fields: 
+	{"objects":[...]} - the assessment_id for each response
+
+# example call
+
+curl -v -H "Content-Type: application/json" -X PATCH --data 
+'{
+   "objects":[
+      {
+         "assessment_id":"4",
+         "type":"0",
+         "boolean":0,
+         "question_id":"12"
+      },
+      {
+         "assessment_id":"4",
+         "type":"4",
+         "question_id":"13",
+         "multi_selects":[
+            {
+               "selection_id":"3"
+            },
+            {
+               "selection_id":"8"
+            }
+         ]
+      }
+   ]
+}' https://secure-headland-8362.herokuapp.com/api/v1/response/
+
+# response:
+
+{"objects": [{"assessment": "/api/v1/assessment/4/", "assessment_id": "4", "body_locations": [], "boolean": false, "created_at": "2015-04-14T19:29:32.627987", "emotion": 0, "id": 16, "multi_selects": [], "number": null, "percent": 0.0, "question_id": 12, "resource_uri": "/api/v1/response/16/", "type": 0, "updated_at": "2015-04-14T19:29:32.665162"}, {"assessment": "/api/v1/assessment/4/", "assessment_id": "4", "body_locations": [], "boolean": true, "created_at": "2015-04-14T19:29:32.675305", "emotion": 0, "id": 17, "multi_selects": [{"id": 3, "resource_uri": "/api/v1/multi_select/3/", "response": "/api/v1/response/17/", "selection_id": 3}, {"id": 4, "resource_uri": "/api/v1/multi_select/4/", "response": "/api/v1/response/17/", "selection_id": 8}], "number": null, "percent": 0.0, "question_id": 13, "resource_uri": "/api/v1/response/17/", "type": 4, "updated_at": "2015-04-14T19:29:32.691491"}]}
+
+# Test:
+
+curl --cookie "sessionid=g7wx1vzizumnie7o8ula2fivw56zqgq0" -v -H "Content-Type: application/json" -X PATCH --data '{"objects":[{"assessment_id":"6","type":"0","boolean":0, "question_id":"12"}, {"assessment_id":"6", "type":"4", "question_id":"13", "multi_selects":[{"selection_id":"3"},{"selection_id":"8"}]}]}' https://secure-headland-8362.herokuapp.com/api/v1/response/
+
+
+######################## Push All Exercise/Pebble Notification Times ########################
+### Push Exercise Times from Pebble Vibration log
+
+# api:
+  exercise_reminder
+
+# type:
+  PATCH
+
+# required fields: 
+  {"objects":[
+      {
+        "notification_time": ...
+      }]}
+
+# example call----------------
+
+curl --cookie "sessionid=g7wx1vzizumnie7o8ula2fivw56zqgq0" -v -H "Content-Type: application/json" -X PATCH --data 
+'{
+    "objects":[
+      {
+        "notification_time": "2015-04-14T23:29:32"
+      },
+      {
+        "notification_time": "2015-04-14T22:29:32"
+      }
+    ]
+}' https://secure-headland-8362.herokuapp.com/api/v1/exercise_reminder/
+
+# Example Response----------------
+
+{"objects": [{"id": 3, "notification_time": "2015-04-14T20:29:32", "resource_uri": "/api/v1/exercise_reminder/3/", "user": "/api/v1/user/65/"}, {"id": 4, "notification_time": "2015-04-14T23:29:32", "resource_uri": "/api/v1/exercise_reminder/4/", "user": "/api/v1/user/65/"}]}
+
+# Tests----------------
+
+curl --cookie "sessionid=g7wx1vzizumnie7o8ula2fivw56zqgq0" -v -H "Content-Type: application/json" -X PATCH --data '{"objects":[{"notification_time" : "2015-04-14T20:29:32"},{"notification_time" : "2015-04-14T23:29:32"}]}' https://secure-headland-8362.herokuapp.com/api/v1/exercise_reminder/
+
+curl --cookie "sessionid=g7wx1vzizumnie7o8ula2fivw56zqgq0" -v -H "Content-Type: application/json" -X POST --data '{"notification_time" : "2015-04-14T19:29:32"}' https://secure-headland-8362.herokuapp.com/api/v1/exercise_reminder/
+
+
+############
