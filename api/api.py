@@ -348,7 +348,7 @@ class ExerciseResource(ModelResource):
 		return super(ExerciseResource, self).obj_create(bundle, user=bundle.request.user)
 
 	def obj_get_list(self, bundle, **kwargs):
-		return super(ExerciseResource, self).obj_get_list(bundle, user=bundle.request.user)
+		return super(ExerciseResource, self).obj_get_list(bundle, user=bundle.request.user.id)
 
 
 #===========================================================================
