@@ -12,6 +12,7 @@ from push_notifications.models import APNSDevice
 class Gender(enum.Enum):
 	MALE = 0
 	FEMALE = 1
+	OTHER = 2
 
 class DayOfWeek(enum.Enum):
 	MO = 0
