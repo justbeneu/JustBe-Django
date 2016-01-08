@@ -154,6 +154,7 @@ def export_xls(modeladmin, request, queryset):
 		(u"Assessment", 2000),
 		(u"Type", 4000),
 		(u"Boolean", 6000),
+                (u"Category", 14000),
         	(u"Number", 8000),
         	(u"Emotion", 10000),
         	(u"Percent", 12000),
