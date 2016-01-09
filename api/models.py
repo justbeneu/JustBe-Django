@@ -116,6 +116,7 @@ class Assessment(models.Model):
 
 class Response(models.Model):
 	assessment = models.ForeignKey(Assessment)
+	category = models.CharField(blank=True, null=True)
 	type = enum.EnumField(ResponseType)
 	boolean = models.BooleanField(default=True)
 	number = models.IntegerField(null=True, blank=True)

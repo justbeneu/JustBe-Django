@@ -141,11 +141,67 @@ class ResponseResource(resources.ModelResource):
 		fields = ('id', 'assessment__id', 'assessment__user__username', 'type', 'boolean', 'number', 'emotion', 'percent', 'question_id', 'created_at', 'updated_at',)
 		export_order = ('id', 'assessment__id', 'assessment__user__username', 'type', 'boolean', 'number', 'emotion', 'percent', 'question_id', 'created_at', 'updated_at',)
 
+def export_xls(modeladmin, request, queryset):
+	import xlwt
+	response = HttpResponse(mimetype='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename=mymodel.xls'
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet("MyModel")
+	
+	row_num = 0
+	
+	columns = [
+		(u"Assessment", 2000),
+		(u"Type", 4000),
+		(u"Boolean", 6000),
+                (u"Category", 14000),
+        	(u"Number", 8000),
+        	(u"Emotion", 10000),
+        	(u"Percent", 12000),
+        	(u"Question ID", 14000),
+        	(u"Created At", 16000),
+        	(u"Updated At", 18000),
+	]
+	
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+	
+	for col_num in xrange(len(columns)):
+	    ws.write(row_num, col_num, columns[col_num][0], font_style)
+	    # set column width
+	    ws.col(col_num).width = columns[col_num][1]
+	
+	font_style = xlwt.XFStyle()
+	font_style.alignment.wrap = 1
+	
+	for obj in queryset:
+	    row_num += 1
+	    row = [
+	        obj.assessment,
+	        obj.type,
+	        obj.boolean,
+	        obj.number,
+	        obj.emotion,
+	        obj.percent,
+	        obj.question_id,
+	        obj.created_at,
+	        obj.updated_at
+	    ]
+	    for col_num in xrange(len(row)):
+	        ws.write(row_num, col_num, row[col_num], font_style)
+        
+	wb.save(response)
+	return response
+
+export_xls.short_description = u"Export XLS"
+
 class ResponseAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 	list_display = ('id', 'assessment_id_display', 'get_user', 'type', 'boolean', 'number', 'emotion', 'percent', 'question_id', 'created_at', 'updated_at')
 	fields = ['assessment', 'type', 'boolean', 'number', 'emotion', 'percent', 'question_id', 'created_at', 'updated_at']
 	readonly_fields = ('created_at', 'updated_at')
 	search_fields = ['type', 'percent', 'question_id', 'emotion', 'assessment__user__username']
+
+	actions = [export_xlsu]
 
 	def assessment_id_display(self, obj):
 		return obj.assessment_id
