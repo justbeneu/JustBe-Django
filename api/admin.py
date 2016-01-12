@@ -202,7 +202,7 @@ class ResponseAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 	readonly_fields = ('created_at', 'updated_at')
 	search_fields = ['type', 'percent', 'question_id', 'emotion', 'assessment__user__username']
 
-	actions = [export_xlsu]
+        actions = [export_xlsu]
 
 	def assessment_id_display(self, obj):
 		return obj.assessment_id
